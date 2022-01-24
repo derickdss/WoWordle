@@ -63,7 +63,7 @@ function App() {
           {responseData.map((result) => (
             <p className="individualResult">{result.word}</p>
           ))}
-        </div> : null}
+        </div> : <div>Enter your confirmed alphabets to get a list of possible results</div>}
       </header>
     </div>
   );
