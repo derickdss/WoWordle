@@ -58,12 +58,12 @@ function App() {
           <input type="text" placeholder='5th' value={alphabets[4] !== '?' ? alphabets[4] : ""} className="individualCell" onChange={e => stringUpdater(4, e)} maxLength={1} />
         </div>
         <div className="button"><button onClick={() => setAlphabets('?????')}>Clear</button></div>
-        <div className="resultsContainer">
+        {responseData.length ? <div className="resultsContainer">
           <span>Results</span>
           {responseData.map((result) => (
             <p className="individualResult">{result.word}</p>
           ))}
-        </div>
+        </div> : null}
       </header>
     </div>
   );
