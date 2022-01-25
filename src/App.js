@@ -3,12 +3,9 @@ import './App.css';
 import axios from 'axios'
 
 const apiRequest = (alphabets, setResponseData) => {
-  console.log('derd, alphabets', typeof alphabets)
-  console.log('derd, alphabets check', alphabets === "?????")
   if (alphabets === '?????') {
     return;
   }
-  console.log('sending', `https://api.datamuse.com/words?sp=${alphabets}`)
   const options = {
     method: 'GET',
     // url: 'https://wordsapiv1.p.rapidapi.com/words/',
@@ -35,17 +32,9 @@ function App() {
     if (e.target.value.length > 1) {
       return;
     }
-    console.log('derd alphabets in function', alphabets);
-    console.log('replacing 1 ', alphabets.substring(0, position))
-    console.log('replacing 2', e.target.value)
-    console.log('replacing 2', alphabets.substring(0, position) + e.target.value)
-    console.log('replacing 3', alphabets.substring(position + 1 + alphabets.length))
-    console.log('replacing 3', alphabets.substring(0, position) + e.target.value + alphabets.substring(position + 1 + alphabets.length))
     setAlphabets(alphabets.substring(0, position) + replacementCharacter + alphabets.substring(position + 1, alphabets.length));
   }
 
-  console.log('alphabets', alphabets)
-  console.log('response data', responseData)
   return (
     <div className="App">
       <header className="App-header">
