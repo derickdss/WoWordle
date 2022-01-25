@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const apiRequest = (alphabets, setResponseData) => {
   if (alphabets === '?????') {
+    setResponseData([])
     return;
   }
   const options = {
