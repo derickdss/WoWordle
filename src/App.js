@@ -35,6 +35,10 @@ function App() {
   const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
   useEffect(() => {
+    if (!searchString.includes('?')) {
+      setResponseData([])
+      return;
+    }
     apiRequest(searchString, setResponseData);
   }, [searchString]);
 
@@ -56,13 +60,30 @@ function App() {
     form.elements[position + 1].focus();
   }
 
+  const focusOnPrevious = (e, position) => {
+    if (position === 0) {
+      return
+    }
+    const form = e.target.form;
+    // const index = [...form].indexOf(e.target);
+    form.elements[position - 1].focus();
+  }
+
   const stringUpdater = (position, e) => {
+    console.log('e.target', e.target.value);
     const replacementCharacter = e.target.value.length !== 0 ? e.target.value : '?'
     if (e.target.value.length > 1) {
       return;
+    } else if (e.target.value.length === 1) {
+      focusOnNext(e, position);
     }
     setSearchString(searchString.substring(0, position) + replacementCharacter + searchString.substring(position + 1, searchString.length));
-    focusOnNext(e, position);
+  }
+
+  const onKeyDown = (position, e) => {
+    if (e.keyCode === 8) {
+      focusOnPrevious(e, position);
+    }
   }
 
   const exclusionListClickHandler = (e) => {
@@ -89,10 +110,10 @@ function App() {
         <div className="row1">
           <form>
             <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="individualCell" onChange={e => stringUpdater(0, e)} maxLength={1} />
-            <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="individualCell" onChange={e => stringUpdater(1, e)} maxLength={1} />
-            <input type="text" placeholder='3rd' value={searchString[2] !== '?' ? searchString[2] : ""} className="individualCell" onChange={e => stringUpdater(2, e)} maxLength={1} />
-            <input type="text" placeholder='4th' value={searchString[3] !== '?' ? searchString[3] : ""} className="individualCell" onChange={e => stringUpdater(3, e)} maxLength={1} />
-            <input type="text" placeholder='5th' value={searchString[4] !== '?' ? searchString[4] : ""} className="individualCell" onChange={e => stringUpdater(4, e)} maxLength={1} />
+            <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="individualCell" onKeyDown={e => onKeyDown(1, e)} onChange={e => stringUpdater(1, e)} maxLength={1} />
+            <input type="text" placeholder='3rd' value={searchString[2] !== '?' ? searchString[2] : ""} className="individualCell" onKeyDown={e => onKeyDown(2, e)} onChange={e => stringUpdater(2, e)} maxLength={1} />
+            <input type="text" placeholder='4th' value={searchString[3] !== '?' ? searchString[3] : ""} className="individualCell" onKeyDown={e => onKeyDown(3, e)} onChange={e => stringUpdater(3, e)} maxLength={1} />
+            <input type="text" placeholder='5th' value={searchString[4] !== '?' ? searchString[4] : ""} className="individualCell" onKeyDown={e => onKeyDown(4, e)} onChange={e => stringUpdater(4, e)} maxLength={1} />
           </form>
         </div>
         <div className="button"><button onClick={clearHandler}>Clear</button></div>
