@@ -44,6 +44,7 @@ function App() {
     } else {
       setFilteredList(responseData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseData, exclusionList])
 
   const focusOnNext = (e, position) => {
@@ -112,7 +113,10 @@ function App() {
         {
           filteredList.length ? (
             <div className="resultsContainer">
-              <span>Results</span>
+              <div style={{
+                borderBottom: '1px solid white',
+                marginBottom: '1rem'
+              }}><span >Results</span></div>
               {filteredList.map((result, index) => (
                 <p className="individualResult" key={index}>{result.word}</p>
               ))}
