@@ -31,12 +31,16 @@ function App() {
   const [responseData, setResponseData] = useState([]);
   const [exclusionList, setExclusionList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
-  const [poppedAlphabet, setPoppedAlphabet] = useState()
+  const [poppedAlphabet, setPoppedAlphabet] = useState();
+  const [completeWord, setCompleteWord] = useState(false);
+  const [focusPrevious, setFocusPrevious] = useState(false);
   const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
   useEffect(() => {
+    setCompleteWord(false);
     if (!searchString.includes('?')) {
-      setResponseData([])
+      setResponseData([]);
+      setCompleteWord(true);
       return;
     }
     apiRequest(searchString, setResponseData);
@@ -67,14 +71,17 @@ function App() {
     const form = e.target.form;
     // const index = [...form].indexOf(e.target);
     form.elements[position - 1].focus();
+    setFocusPrevious(false)
   }
 
   const stringUpdater = (position, e) => {
-    console.log('e.target', e.target.value);
     const replacementCharacter = e.target.value.length !== 0 ? e.target.value : '?'
     if (e.target.value.length > 1) {
       return;
-    } else if (e.target.value.length === 1) {
+    }
+    if (focusPrevious) {
+      focusOnPrevious(e, position);
+    } else {
       focusOnNext(e, position);
     }
     setSearchString(searchString.substring(0, position) + replacementCharacter + searchString.substring(position + 1, searchString.length));
@@ -82,7 +89,7 @@ function App() {
 
   const onKeyDown = (position, e) => {
     if (e.keyCode === 8) {
-      focusOnPrevious(e, position);
+      setFocusPrevious(true)
     }
   }
 
@@ -109,7 +116,7 @@ function App() {
         <h1>World of Wordle</h1>
         <div className="row1">
           <form>
-            <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="individualCell" onChange={e => stringUpdater(0, e)} maxLength={1} />
+            <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="individualCell" onKeyDown={e => onKeyDown(0, e)} onChange={e => stringUpdater(0, e)} maxLength={1} />
             <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="individualCell" onKeyDown={e => onKeyDown(1, e)} onChange={e => stringUpdater(1, e)} maxLength={1} />
             <input type="text" placeholder='3rd' value={searchString[2] !== '?' ? searchString[2] : ""} className="individualCell" onKeyDown={e => onKeyDown(2, e)} onChange={e => stringUpdater(2, e)} maxLength={1} />
             <input type="text" placeholder='4th' value={searchString[3] !== '?' ? searchString[3] : ""} className="individualCell" onKeyDown={e => onKeyDown(3, e)} onChange={e => stringUpdater(3, e)} maxLength={1} />
@@ -117,7 +124,8 @@ function App() {
           </form>
         </div>
         <div className="button"><button onClick={clearHandler}>Clear</button></div>
-        <div>
+        {completeWord ? <h1>Congrats, you've got your word!</h1> :
+          (<div>
           <div style={{ borderBottom: '1px solid white', paddingBottom: '2rem' }}>Enter your confirmed alphabets to get a list of possible results</div>
           <p>
             Select the alphabets to exclude from search:
@@ -130,7 +138,7 @@ function App() {
 
           <p>Excluded alphabets:</p>
           <p>{exclusionList.map((alphabet, index) => <span key={index}>{alphabet}, </span>)}</p>
-        </div>
+          </div>)}
         {
           filteredList.length ? (
             <div className="resultsContainer">
