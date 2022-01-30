@@ -114,7 +114,7 @@ function App() {
       <header className="App-header">
         <div className="InputContainer">
         <h1>World of Wordle</h1>
-        <div className="row1">
+          <div className="Inputs">
           <form>
               <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(0, e)} onChange={e => stringUpdater(0, e)} maxLength={1} />
               <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(1, e)} onChange={e => stringUpdater(1, e)} maxLength={1} />
