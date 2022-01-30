@@ -139,8 +139,7 @@ function App() {
               <span
                 style={{ color: searchString === '?????' || searchString.indexOf(alphabet) > -1 ? 'darkgrey' : null, fontSize: exclusionList.includes(alphabet) ? 'xxx-large' : null }} key={index}><input type="checkbox" id={alphabet} name={alphabet} disabled={searchString === '?????' || searchString.indexOf(alphabet) > -1} value={alphabet} checked={exclusionList.includes(alphabet)} onChange={exclusionListClickHandler} />{alphabet}, </span>)}
 
-          <p>Excluded alphabets:</p>
-          <p>{exclusionList.map((alphabet, index) => <span key={index}>{alphabet}, </span>)}</p>
+            <p>Excluded alphabets: {exclusionList.map((alphabet, index) => <span key={index}>{index !== 0 ? ',' : ''}{alphabet} </span>)}</p>
           </div>)}
         {
           filteredList.length ? (
