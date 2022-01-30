@@ -116,14 +116,14 @@ function App() {
         <h1>World of Wordle</h1>
         <div className="row1">
           <form>
-            <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="individualCell" onKeyDown={e => onKeyDown(0, e)} onChange={e => stringUpdater(0, e)} maxLength={1} />
-            <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="individualCell" onKeyDown={e => onKeyDown(1, e)} onChange={e => stringUpdater(1, e)} maxLength={1} />
-            <input type="text" placeholder='3rd' value={searchString[2] !== '?' ? searchString[2] : ""} className="individualCell" onKeyDown={e => onKeyDown(2, e)} onChange={e => stringUpdater(2, e)} maxLength={1} />
-            <input type="text" placeholder='4th' value={searchString[3] !== '?' ? searchString[3] : ""} className="individualCell" onKeyDown={e => onKeyDown(3, e)} onChange={e => stringUpdater(3, e)} maxLength={1} />
-            <input type="text" placeholder='5th' value={searchString[4] !== '?' ? searchString[4] : ""} className="individualCell" onKeyDown={e => onKeyDown(4, e)} onChange={e => stringUpdater(4, e)} maxLength={1} />
+              <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(0, e)} onChange={e => stringUpdater(0, e)} maxLength={1} />
+              <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(1, e)} onChange={e => stringUpdater(1, e)} maxLength={1} />
+              <input type="text" placeholder='3rd' value={searchString[2] !== '?' ? searchString[2] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(2, e)} onChange={e => stringUpdater(2, e)} maxLength={1} />
+              <input type="text" placeholder='4th' value={searchString[3] !== '?' ? searchString[3] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(3, e)} onChange={e => stringUpdater(3, e)} maxLength={1} />
+              <input type="text" placeholder='5th' value={searchString[4] !== '?' ? searchString[4] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(4, e)} onChange={e => stringUpdater(4, e)} maxLength={1} />
           </form>
         </div>
-        <div className="button"><button onClick={clearHandler}>Clear</button></div>
+          <div className="Button"><button onClick={clearHandler}>Clear</button></div>
         </div>
         {completeWord ? <h1>Congrats, you've got your word!</h1> :
           (<div>
@@ -133,24 +133,27 @@ function App() {
                 Select the alphabets to exclude from search:
               </p>
             </div>
-          {
+            <div className="AlphabetsContainer">{
 
             alphabets.map((alphabet, index) =>
               <span
-                style={{ color: searchString === '?????' || searchString.indexOf(alphabet) > -1 ? 'darkgrey' : null, fontSize: exclusionList.includes(alphabet) ? 'xxx-large' : null }} key={index}><input type="checkbox" id={alphabet} name={alphabet} disabled={searchString === '?????' || searchString.indexOf(alphabet) > -1} value={alphabet} checked={exclusionList.includes(alphabet)} onChange={exclusionListClickHandler} />{alphabet}, </span>)}
+                style={{ color: searchString === '?????' || searchString.indexOf(alphabet) > -1 ? 'darkgrey' : null, fontSize: exclusionList.includes(alphabet) ? 'xxx-large' : null }} key={index}><input type="checkbox" id={alphabet} name={alphabet} disabled={searchString === '?????' || searchString.indexOf(alphabet) > -1} value={alphabet} checked={exclusionList.includes(alphabet)} onChange={exclusionListClickHandler} />{alphabet}
+              </span>
+            )}
+            </div>
 
-            <p>Excluded alphabets: {exclusionList.map((alphabet, index) => <span key={index}>{index !== 0 ? ',' : ''}{alphabet} </span>)}</p>
+            {exclusionList.length ? <div className="ExcludedListContainer">Excluded alphabets: {exclusionList.map((alphabet, index) => <span key={index}>{index !== 0 ? ',' : ''}{alphabet} </span>)}</div> : null}
           </div>)}
         {
           filteredList.length ? (
-            <div className="resultsContainer">
+            <div className="ResultsContainer">
               <div style={{
                 borderBottom: '1px solid white',
                 marginBottom: '1rem'
               }}><span >Results</span></div>
-              {filteredList.map((result, index) => (
-                <p className="individualResult" key={index}>{result.word}</p>
-              ))}
+              <div className="WordsContainer">{filteredList.map((result, index) => (
+                <p className="IndividualResult" key={index}>{result.word}</p>
+              ))}</div>
             </div>) : null
         }
       </header>
