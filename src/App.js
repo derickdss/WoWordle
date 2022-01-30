@@ -65,12 +65,11 @@ function App() {
   }
 
   const focusOnPrevious = (e, position) => {
-    if (position === 0) {
-      return
-    }
     const form = e.target.form;
     // const index = [...form].indexOf(e.target);
-    form.elements[position - 1].focus();
+    if (position !== 0) {
+      form.elements[position - 1].focus();
+    }
     setFocusPrevious(false)
   }
 
@@ -113,6 +112,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <div className="InputContainer">
         <h1>World of Wordle</h1>
         <div className="row1">
           <form>
@@ -124,12 +124,15 @@ function App() {
           </form>
         </div>
         <div className="button"><button onClick={clearHandler}>Clear</button></div>
+        </div>
         {completeWord ? <h1>Congrats, you've got your word!</h1> :
           (<div>
           <div style={{ borderBottom: '1px solid white', paddingBottom: '2rem' }}>Enter your confirmed alphabets to get a list of possible results</div>
-          <p>
-            Select the alphabets to exclude from search:
-          </p>
+            <div>
+              <p>
+                Select the alphabets to exclude from search:
+              </p>
+            </div>
           {
 
             alphabets.map((alphabet, index) =>
