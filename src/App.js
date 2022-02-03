@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './App.css';
 import axios from 'axios'
+import { initGA, PageView } from "./Tracking";
 
 const apiRequest = (searchString, setResponseData) => {
   if (searchString === '?????') {
@@ -35,6 +36,13 @@ function App() {
   const [completeWord, setCompleteWord] = useState(false);
   const [focusPrevious, setFocusPrevious] = useState(false);
   const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+  useEffect(() => {
+    if (window.location.hostname !== "localhost") {
+      initGA("UA-165250761-2");
+      PageView();
+    }
+  }, [])
 
   useEffect(() => {
     setCompleteWord(false);
