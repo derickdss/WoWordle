@@ -27,9 +27,9 @@ const filterEntireExclusionList = async (initialList, data, exclusionList, updat
     list1.filter(a => isUnion === list2.some(b => a.word === b.word));
 
   // Following functions are to be used:
-  const inBoth = (list1, list2) => operation(list1, list2, true),
-    inFirstOnly = operation,
-    inSecondOnly = (list1, list2) => inFirstOnly(list2, list1);
+  const inBoth = (list1, list2) => operation(list1, list2, true);
+    // inFirstOnly = operation;
+    // inSecondOnly = (list1, list2) => inFirstOnly(list2, list1);
   const tempList =
     exclusionList.map((alphabet) => {
       return initialList.filter((word) => {
