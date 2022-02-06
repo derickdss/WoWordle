@@ -21,10 +21,25 @@ const apiRequest = (searchString, setResponseData) => {
     })
 }
 
-const filterExclusionList = (initialList, data, exclusionList, updateList, poppedAlphabet) => {
-  const listWithAddedExclusions = (data.filter((word) => !word.word.includes(exclusionList[exclusionList.length - 1])));
-  const listWithAddedAndRemovedExclusions = poppedAlphabet ? [...listWithAddedExclusions, ...(initialList.filter((word) => word.word.includes(poppedAlphabet)))] : listWithAddedExclusions;
-  updateList(listWithAddedAndRemovedExclusions);
+const filterEntireExclusionList = async (initialList, data, exclusionList, updateList) => {
+  // Generic helper function that can be used for the three operations:        
+  const operation = (list1, list2, isUnion = false) =>
+    list1.filter(a => isUnion === list2.some(b => a.word === b.word));
+
+  // Following functions are to be used:
+  const inBoth = (list1, list2) => operation(list1, list2, true),
+    inFirstOnly = operation,
+    inSecondOnly = (list1, list2) => inFirstOnly(list2, list1);
+  const tempList =
+    exclusionList.map((alphabet) => {
+      return initialList.filter((word) => {
+        return !word.word.includes(alphabet);
+      })
+    });
+  const exclusionFilteredList = await tempList.reduce((currentValue, nextValue) => {
+    return inBoth(currentValue, nextValue);
+  })
+  updateList(exclusionFilteredList);
 }
 
 function App() {
@@ -32,7 +47,6 @@ function App() {
   const [responseData, setResponseData] = useState([]);
   const [exclusionList, setExclusionList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
-  const [poppedAlphabet, setPoppedAlphabet] = useState();
   const [completeWord, setCompleteWord] = useState(false);
   const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
@@ -55,7 +69,7 @@ function App() {
 
   useEffect(() => {
     if (exclusionList.length && responseData.length) {
-      filterExclusionList(responseData, filteredList, exclusionList, setFilteredList, poppedAlphabet);
+      filterEntireExclusionList(responseData, filteredList, exclusionList, setFilteredList);
     } else {
       setFilteredList(responseData);
     }
@@ -90,18 +104,16 @@ function App() {
 
   const onKeyUp = (position, e) => {
     if (e.keyCode === 8) {
-      focusOnPrevious(e, position)
+      focusOnPrevious(e, position);
     }
   }
 
   const exclusionListClickHandler = (e) => {
     if (!exclusionList.includes(e.target.value)) {
       setExclusionList(exclusionList => [...exclusionList, e.target.value]);
-      setPoppedAlphabet();
     } else {
-      console.log('remove exclusion', exclusionList.indexOf(e.target.value))
       const a = exclusionList;
-      setPoppedAlphabet(a.splice(exclusionList.indexOf(e.target.value), 1))
+      (a.splice(exclusionList.indexOf(e.target.value), 1))
       setExclusionList([...a]);
     }
   }
@@ -110,7 +122,6 @@ function App() {
     setSearchString('?????')
     setExclusionList([])
   }
-
   return (
     <div className="App">
       <header className="App-header">
