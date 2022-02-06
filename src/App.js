@@ -34,7 +34,6 @@ function App() {
   const [filteredList, setFilteredList] = useState([]);
   const [poppedAlphabet, setPoppedAlphabet] = useState();
   const [completeWord, setCompleteWord] = useState(false);
-  const [focusPrevious, setFocusPrevious] = useState(false);
   const alphabets = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
   useEffect(() => {
@@ -68,17 +67,14 @@ function App() {
       return
     }
     const form = e.target.form;
-    // const index = [...form].indexOf(e.target);
     form.elements[position + 1].focus();
   }
 
   const focusOnPrevious = (e, position) => {
     const form = e.target.form;
-    // const index = [...form].indexOf(e.target);
     if (position !== 0) {
       form.elements[position - 1].focus();
     }
-    setFocusPrevious(false)
   }
 
   const stringUpdater = (position, e) => {
@@ -86,17 +82,15 @@ function App() {
     if (e.target.value.length > 1) {
       return;
     }
-    if (focusPrevious) {
-      focusOnPrevious(e, position);
-    } else {
+    if (e.target.value.length) {
       focusOnNext(e, position);
     }
     setSearchString(searchString.substring(0, position) + replacementCharacter + searchString.substring(position + 1, searchString.length));
   }
 
-  const onKeyDown = (position, e) => {
+  const onKeyUp = (position, e) => {
     if (e.keyCode === 8) {
-      setFocusPrevious(true)
+      focusOnPrevious(e, position)
     }
   }
 
@@ -124,11 +118,11 @@ function App() {
         <h1>World of Wordle</h1>
           <div className="Inputs">
           <form>
-              <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(0, e)} onChange={e => stringUpdater(0, e)} maxLength={1} />
-              <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(1, e)} onChange={e => stringUpdater(1, e)} maxLength={1} />
-              <input type="text" placeholder='3rd' value={searchString[2] !== '?' ? searchString[2] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(2, e)} onChange={e => stringUpdater(2, e)} maxLength={1} />
-              <input type="text" placeholder='4th' value={searchString[3] !== '?' ? searchString[3] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(3, e)} onChange={e => stringUpdater(3, e)} maxLength={1} />
-              <input type="text" placeholder='5th' value={searchString[4] !== '?' ? searchString[4] : ""} className="IndividualCell" onKeyDown={e => onKeyDown(4, e)} onChange={e => stringUpdater(4, e)} maxLength={1} />
+              <input type="text" placeholder='1st' value={searchString[0] !== '?' ? searchString[0] : ""} className="IndividualCell" onKeyUp={e => onKeyUp(0, e)} onChange={e => stringUpdater(0, e)} maxLength={1} />
+              <input type="text" placeholder='2nd' value={searchString[1] !== '?' ? searchString[1] : ""} className="IndividualCell" onKeyUp={e => onKeyUp(1, e)} onChange={e => stringUpdater(1, e)} maxLength={1} />
+              <input type="text" placeholder='3rd' value={searchString[2] !== '?' ? searchString[2] : ""} className="IndividualCell" onKeyUp={e => onKeyUp(2, e)} onChange={e => stringUpdater(2, e)} maxLength={1} />
+              <input type="text" placeholder='4th' value={searchString[3] !== '?' ? searchString[3] : ""} className="IndividualCell" onKeyUp={e => onKeyUp(3, e)} onChange={e => stringUpdater(3, e)} maxLength={1} />
+              <input type="text" placeholder='5th' value={searchString[4] !== '?' ? searchString[4] : ""} className="IndividualCell" onKeyUp={e => onKeyUp(4, e)} onChange={e => stringUpdater(4, e)} maxLength={1} />
           </form>
         </div>
           <div className="Button"><button onClick={clearHandler}>Clear</button></div>
